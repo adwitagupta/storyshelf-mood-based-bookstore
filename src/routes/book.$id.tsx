@@ -73,7 +73,7 @@ function BookDetail() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
           <div className="flex flex-wrap gap-1.5">
-            {book.moods.map(m => (
+            {book.moods.map((m: typeof book.moods[number]) => (
               <Link key={m} to="/shop" search={{ mood: m }} className="rounded-full border border-border bg-background/60 px-2.5 py-1 text-[10px] uppercase tracking-wider text-muted-foreground hover:border-primary/40">
                 {m}
               </Link>
