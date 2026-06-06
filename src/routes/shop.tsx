@@ -1,12 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { FloatingAssistant } from "@/components/FloatingAssistant";
 import { BookCard } from "@/components/BookCard";
-import { BOOKS, MOODS, type Mood } from "@/lib/data";
+import { BOOKS, MOODS, COLLECTIONS, type Mood, type CollectionSlug } from "@/lib/data";
+
+type ShopSearch = { mood?: Mood | "All"; collection?: CollectionSlug };
 
 export const Route = createFileRoute("/shop")({
+  validateSearch: (search: Record<string, unknown>): ShopSearch => ({
+    mood: (search.mood as Mood | "All" | undefined) ?? undefined,
+    collection: (search.collection as CollectionSlug | undefined) ?? undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Shop — StoryShelf" },
@@ -17,14 +23,20 @@ export const Route = createFileRoute("/shop")({
 });
 
 function Shop() {
-  const [mood, setMood] = useState<Mood | "All">("All");
+  const search = Route.useSearch();
+  const [mood, setMood] = useState<Mood | "All">(search.mood ?? "All");
+  const [collection, setCollection] = useState<CollectionSlug | "All">(search.collection ?? "All");
   const [maxPrice, setMaxPrice] = useState(800);
   const [minRating, setMinRating] = useState(0);
   const [author, setAuthor] = useState("");
   const [length, setLength] = useState<"Any"|"Short"|"Medium"|"Long">("Any");
 
+  useEffect(() => { if (search.mood) setMood(search.mood); }, [search.mood]);
+  useEffect(() => { if (search.collection) setCollection(search.collection); }, [search.collection]);
+
   const filtered = useMemo(() => BOOKS.filter(b => {
     if (mood !== "All" && !b.moods.includes(mood)) return false;
+    if (collection !== "All" && !b.collections.includes(collection)) return false;
     if (b.price > maxPrice) return false;
     if (b.rating < minRating) return false;
     if (author && !b.author.toLowerCase().includes(author.toLowerCase())) return false;
@@ -32,14 +44,21 @@ function Shop() {
     if (length === "Medium" && (b.pages < 280 || b.pages > 400)) return false;
     if (length === "Long" && b.pages <= 400) return false;
     return true;
-  }), [mood, maxPrice, minRating, author, length]);
+  }), [mood, collection, maxPrice, minRating, author, length]);
+
+  const collectionTitle = COLLECTIONS.find(c => c.slug === collection)?.title;
+  const headline = collection !== "All" && collectionTitle
+    ? collectionTitle
+    : mood !== "All"
+    ? `${mood} reads`
+    : "Every book, sorted by feeling.";
 
   return (
     <div className="bg-hero min-h-screen">
       <Navbar />
       <header className="mx-auto max-w-7xl px-6 pt-12 pb-6">
         <span className="text-xs uppercase tracking-[0.25em] text-primary">The shelf</span>
-        <h1 className="mt-3 font-display text-5xl">Every book, sorted by feeling.</h1>
+        <h1 className="mt-3 font-display text-5xl">{headline}</h1>
         <p className="mt-3 max-w-xl text-muted-foreground">Filter by mood, price, author, or how long you want to spend inside someone else's life.</p>
       </header>
 
@@ -49,6 +68,14 @@ function Shop() {
             <div className="flex flex-wrap gap-1.5">
               {(["All", ...MOODS.map(m=>m.name)] as const).map(m => (
                 <button key={m} onClick={()=>setMood(m as Mood|"All")} className={`rounded-full border px-2.5 py-1 text-xs transition ${mood===m?"border-primary bg-primary text-primary-foreground":"border-border bg-background/60 hover:border-primary/40"}`}>{m}</button>
+              ))}
+            </div>
+          </Filter>
+          <Filter label="Collection">
+            <div className="flex flex-wrap gap-1.5">
+              <button onClick={()=>setCollection("All")} className={`rounded-full border px-2.5 py-1 text-xs transition ${collection==="All"?"border-primary bg-primary text-primary-foreground":"border-border bg-background/60 hover:border-primary/40"}`}>All</button>
+              {COLLECTIONS.map(c => (
+                <button key={c.slug} onClick={()=>setCollection(c.slug)} className={`rounded-full border px-2.5 py-1 text-xs transition ${collection===c.slug?"border-primary bg-primary text-primary-foreground":"border-border bg-background/60 hover:border-primary/40"}`}>{c.icon} {c.title}</button>
               ))}
             </div>
           </Filter>
