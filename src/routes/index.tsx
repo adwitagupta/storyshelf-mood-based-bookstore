@@ -160,24 +160,29 @@ function Collections() {
       <div className="mt-12 grid gap-4 md:grid-cols-3 lg:grid-cols-5">
         {COLLECTIONS.map((c, i) => (
           <motion.div
-            key={c.title}
+            key={c.slug}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.05, duration: 0.5 }}
-            className="group relative h-56 overflow-hidden rounded-2xl p-6 text-cream shadow-soft transition-all hover:shadow-glow"
-            style={{
-              background:
-                i % 2 === 0
-                  ? "linear-gradient(160deg,var(--lagoon),color-mix(in oklab,var(--rosewood) 70%,var(--lagoon)))"
-                  : "linear-gradient(160deg,color-mix(in oklab,var(--sage) 80%,var(--lagoon)),var(--lagoon))",
-            }}
           >
-            <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-white/10 blur-2xl transition-transform group-hover:scale-110"/>
-            <span className="text-2xl">{c.icon}</span>
-            <h3 className="mt-8 font-display text-xl leading-tight">{c.title}</h3>
-            <p className="mt-2 text-xs text-white/70">{c.subtitle}</p>
-            <span className="absolute bottom-5 inline-flex items-center gap-1 text-xs">Open shelf <ArrowRight className="h-3 w-3"/></span>
+            <Link
+              to="/shop"
+              search={{ collection: c.slug }}
+              className="group relative block h-56 overflow-hidden rounded-2xl p-6 text-cream shadow-soft transition-all hover:shadow-glow"
+              style={{
+                background:
+                  i % 2 === 0
+                    ? "linear-gradient(160deg,var(--lagoon),color-mix(in oklab,var(--rosewood) 70%,var(--lagoon)))"
+                    : "linear-gradient(160deg,color-mix(in oklab,var(--sage) 80%,var(--lagoon)),var(--lagoon))",
+              }}
+            >
+              <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-white/10 blur-2xl transition-transform group-hover:scale-110"/>
+              <span className="text-2xl">{c.icon}</span>
+              <h3 className="mt-8 font-display text-xl leading-tight">{c.title}</h3>
+              <p className="mt-2 text-xs text-white/70">{c.subtitle}</p>
+              <span className="absolute bottom-5 inline-flex items-center gap-1 text-xs">Open shelf <ArrowRight className="h-3 w-3"/></span>
+            </Link>
           </motion.div>
         ))}
       </div>
