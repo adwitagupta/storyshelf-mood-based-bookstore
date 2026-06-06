@@ -122,26 +122,31 @@ function MoodGrid() {
       <SectionHead eyebrow="Pick a feeling" title="Eight moods. Endless stories." />
       <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
         {MOODS.map((m, i) => (
-          <motion.button
+          <motion.div
             key={m.name}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.04, duration: 0.4 }}
             whileHover={{ y: -4 }}
-            className="glass group relative overflow-hidden rounded-2xl p-5 text-left transition-shadow hover:shadow-glow"
           >
-            <div
-              className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-40 blur-2xl transition-opacity group-hover:opacity-70"
-              style={{ background: m.tint }}
-            />
-            <span className="text-3xl">{m.emoji}</span>
-            <h3 className="mt-4 font-display text-xl">{m.name}</h3>
-            <p className="mt-1 text-xs text-muted-foreground">{m.blurb}</p>
-            <span className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-              Explore <ArrowRight className="h-3 w-3" />
-            </span>
-          </motion.button>
+            <Link
+              to="/shop"
+              search={{ mood: m.name }}
+              className="glass group relative block overflow-hidden rounded-2xl p-5 text-left transition-shadow hover:shadow-glow"
+            >
+              <div
+                className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-40 blur-2xl transition-opacity group-hover:opacity-70"
+                style={{ background: m.tint }}
+              />
+              <span className="text-3xl">{m.emoji}</span>
+              <h3 className="mt-4 font-display text-xl">{m.name}</h3>
+              <p className="mt-1 text-xs text-muted-foreground">{m.blurb}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                Explore <ArrowRight className="h-3 w-3" />
+              </span>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </section>
