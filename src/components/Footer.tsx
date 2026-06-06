@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Twitter, Sparkles } from "lucide-react";
+import { Sparkles, AtSign, Send } from "lucide-react";
 
 export function Footer() {
   return (
@@ -43,9 +43,9 @@ export function Footer() {
               <button className="bg-primary px-4 text-sm font-medium text-primary-foreground hover:opacity-90">Join</button>
             </form>
             <div className="mt-6 flex gap-3">
-              <a href="#" className="grid h-9 w-9 place-items-center rounded-full border border-white/15 hover:bg-white/10"><Instagram className="h-4 w-4"/></a>
-              <a href="#" className="grid h-9 w-9 place-items-center rounded-full border border-white/15 hover:bg-white/10"><Twitter className="h-4 w-4"/></a>
-              <a href="#" className="grid h-9 w-9 place-items-center rounded-full border border-white/15 hover:bg-white/10"><Sparkles className="h-4 w-4"/></a>
+              <a href="#" aria-label="Instagram" className="grid h-9 w-9 place-items-center rounded-full border border-white/15 hover:bg-white/10"><AtSign className="h-4 w-4"/></a>
+              <a href="#" aria-label="Email" className="grid h-9 w-9 place-items-center rounded-full border border-white/15 hover:bg-white/10"><Send className="h-4 w-4"/></a>
+              <a href="#" aria-label="Updates" className="grid h-9 w-9 place-items-center rounded-full border border-white/15 hover:bg-white/10"><Sparkles className="h-4 w-4"/></a>
             </div>
           </div>
         </div>
